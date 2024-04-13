@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
+
 export default function App() {
   const [mapRegion, setMapRegion] = useState({
     latitude: 42.055984,
