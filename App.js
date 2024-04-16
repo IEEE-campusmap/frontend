@@ -43,6 +43,35 @@ export default function App() {
   );
 }
 
+function sendLocationtoBackend(){
+  getCurrentPositionAsync().then(location => {
+    fetch('/api/location', {
+      method: "POST",
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(location)
+    })
+    .then(reponse => {
+      if (!reponse.ok){
+        throw new Error('Failed to send location data to backend');
+      }
+      console.log('Location data send successfully');
+    })
+    .catch(error => {
+      console.error("Error sending location data:", error);
+    });
+  })
+  .catch(error => {
+    console.error("Error retrieving user location: ", error);
+  });
+}
+
+sendLocationtoBackend();
+setInterval(sendLocationtoBackend, 60000);
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
