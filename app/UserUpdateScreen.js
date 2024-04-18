@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Slider, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import Slider from "@react-native-community/slider";
 
 const UserUpdateScreen = ({ navigation }) => {
   const [crowdedness, setCrowdedness] = useState(0);
