@@ -74,11 +74,11 @@ export default function App() {
   // setInterval(sendLocationtoBackend, 1000);
   return (
     <View style={styles.container}>
-      
+{/*       
       <MapView style={styles.map} region={mapRegion}>
         <Marker coordinate={mapRegion} title="Marker" />
       </MapView> 
-      <Button title="Get Location" onPress={userLocation} />
+      <Button title="Get Location" onPress={userLocation} /> */}
 
 
       {/* update screen */}  
