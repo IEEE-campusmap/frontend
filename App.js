@@ -38,7 +38,6 @@ export default function App() {
 
           <Stack.Screen name="map" component={Maps} />
         </Stack.Navigator> 
-
       </NavigationContainer>
  
     </View>
