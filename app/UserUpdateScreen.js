@@ -44,7 +44,7 @@ const UserUpdateScreen = ({ navigation }) => {
       <Slider
         style={{ width: '80%', marginTop: 10 }}
         minimumValue={0}
-        maximumValue={100}
+        maximumValue={10}
         step={1}
         value={crowdedness}
         onValueChange={handleSliderChange}
