@@ -34,9 +34,9 @@ export default function App() {
             options={{ title: "Welcome" }}
           />
           <Stack.Screen name="screen" component={UserUpdateScreen} />
-          {/* <Stack.Screen name="login" component={Login} /> */}
+          <Stack.Screen name="login" component={Login} />
           <Stack.Screen name="map" component={Maps} />
-          {/* <Stack.Screen name="signup" component={SignupScreen} /> */}
+          <Stack.Screen name="signup" component={SignupScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

@@ -78,5 +78,19 @@ const styles = StyleSheet.create({
     IconBehave: {
         padding: 14
     },
+    button: {
+        width: 303,
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        backgroundColor: '#FFFFFF',
+        borderWidth: 1,
+        borderColor: '#40B59F',
+        borderStyle: 'solid',
+        borderRadius: 5,
+        marginBottom: 20,
+      },
+    buttonText: {color: '#40B59F', fontSize: 23, fontWeight: '700'},
 })
 export default HomeScreen;
