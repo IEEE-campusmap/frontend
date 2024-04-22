@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View, Dimensions, Button, Pressable, Image } from "react-native"; 
+import { StyleSheet, Text, View, Dimensions, Pressable, Image, TouchableOpacity } from "react-native"; 
 import Icon from "react-native-ico-material-design";
 import { StatusBar } from "expo-status-bar";
-import Maps from './Map';  
+import Maps from './Map';
+import Login from './Log in';
+import SignupScreen from "./Sign up";
 
 const HomeScreen = ({navigation}) => {
     var iconHeight = 26;
@@ -33,6 +35,12 @@ const HomeScreen = ({navigation}) => {
                 </View>
 
                 <View style = {styles.NavContainer}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('login')}>
+                    <Text style={styles.buttonText}>Log in</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('signup')}>
+                    <Text style={styles.buttonText}>Sign up</Text>
+                </TouchableOpacity>
                     <View style ={styles.NavBar}>
                         <Pressable onPress={() => navigation.navigate('map')} style={styles.IconBehave} android_ripple={{borderless:true, radius:50}}>
                             <Icon name="favorite-heart-button" height={iconHeight} width={iconWidth} color='#fbf5f3'/>
