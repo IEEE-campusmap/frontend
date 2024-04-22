@@ -5,41 +5,39 @@ import { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
-import { Link } from 'expo-router';
-import { Pressable } from "react-native"; 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import UserUpdateScreen from './app/UserUpdateScreen';
-import Maps from './app/Map';
-import HomeScreen from './app/Homescreen';
+import { Link } from "expo-router";
+import { Pressable } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import UserUpdateScreen from "./app/UserUpdateScreen";
+import Maps from "./app/Map";
+import HomeScreen from "./app/Homescreen";
 
 const Stack = createNativeStackNavigator();
- 
+
 export default function App() {
   return (
     <View style={styles.container}>
-{/*       
+      {/*       
       <MapView style={styles.map} region={mapRegion}>
         <Marker coordinate={mapRegion} title="Marker" />
       </MapView> 
       <Button title="Get Location" onPress={userLocation} /> */}
 
-
-      {/* update screen */}  
+      {/* update screen */}
       <NavigationContainer>
-        <Stack.Navigator> 
+        <Stack.Navigator>
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{title: 'Welcome'}}
+            options={{ title: "Welcome" }}
           />
-          
+
           <Stack.Screen name="screen" component={UserUpdateScreen} />
 
           <Stack.Screen name="map" component={Maps} />
-        </Stack.Navigator> 
+        </Stack.Navigator>
       </NavigationContainer>
- 
     </View>
   );
 }
@@ -54,9 +52,9 @@ const styles = StyleSheet.create({
   },
   update: {
     flex: 2,
-    // flex: 1, 
+    // flex: 1,
     // justifyContent: "center",
-    // alignItems: "center", 
-    // backgroundColor: "#ffc2c2", 
-  }
+    // alignItems: "center",
+    // backgroundColor: "#ffc2c2",
+  },
 });
