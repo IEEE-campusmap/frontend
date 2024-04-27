@@ -57,13 +57,14 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Icon name="user-shape" height='100' width='100' color="#3E4958" style={styles.icon}/>
-      <View style={styles.circle}>
-      <Svg width="160" height="160" viewBox="0 0 160 160" fill="none"> 
-        <Circle cx="80" cy="80" r="80" fill="#EEEEEE"/>
-      </Svg>
+      <View style={styles.userIcon}>
+        <Icon name="user-shape" height='100' width='100' color="#3E4958" style={styles.icon}/>
+        <View style={styles.circle}>
+          <Svg width="160" height="160" viewBox="0 0 160 160" fill="none"> 
+            <Circle cx="80" cy="80" r="80" fill="#EEEEEE"/>
+          </Svg>
+        </View>
       </View>
-
       <Text style={styles.label}>Enter your Northwestern email to sign up</Text>
       <TextInput
         style={styles.textInput}
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
       width: '100%',
-      height: 53,
+      height: 55,
       backgroundColor: '#FFFFFF',
       borderWidth: 1,
       borderColor: '#EEEEEE',
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.11,
       shadowRadius: 15, 
       paddingHorizontal: 10,
-      marginBottom: 20,
+      marginBottom: 15,
   },
   passwordContainer: {
     justifyContent: 'space-between',
@@ -177,6 +178,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     position: 'relative',
+    marginTop: 15,
   },
   arrow: {
     position: 'absolute',
@@ -200,14 +202,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
   },
+  userIcon:{
+    marginTop: 35,
+    marginBottom: 90,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   icon: {
-    marginTop: 50,
-    marginBottom: 60,
-    position: 'relative', // Ensures the icon is positioned relative to the container
-    zIndex: 1
+    zIndex: 1,
+    top: 23,
   },
   circle: {
-    position: 'absolute', // Ensures the circle is behind other elements
-    top: 23, // Adjust position as needed
+    position: 'absolute',
+    top: 0,
   },
 });
