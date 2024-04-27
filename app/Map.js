@@ -4,6 +4,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
+
+
 const update_time = 60000;
 export default function App() {
   const [mapRegion, setMapRegion] = useState({
