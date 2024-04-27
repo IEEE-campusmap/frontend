@@ -39,7 +39,7 @@ const HomeScreen = ({navigation}) => {
                         </Pressable>
                         <Pressable onPress={() => navigation.navigate('screen')} style={styles.IconBehave} android_ripple={{borderless:true, radius:50}}>
                             <Icon name="chat-bubble" height={iconHeight} width={iconWidth} color='#fbf5f3'/>
-                        </Pressable>
+                        </Pressable> 
                     </View>
                 </View>
 
