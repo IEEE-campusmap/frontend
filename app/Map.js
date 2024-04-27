@@ -3,7 +3,9 @@ import { StyleSheet, Text, View, Dimensions, Button } from "react-native";
 import React from "react";
 import { useState, useEffect } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
+import DrawerComponent from "./MarkerClickDrawer";
 import * as Location from "expo-location";
+
 const update_time = 60000;
 export default function App() {
   const [mapRegion, setMapRegion] = useState({
@@ -12,6 +14,8 @@ export default function App() {
     latitudeDelta: 0.005,
     longitudeDelta: 0.005 * 2.16667,
   });
+
+ const [selectedMarker, setSelectedMarker] = useState(null);
 
   const userLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -61,6 +65,12 @@ export default function App() {
       });
   }
 
+  const handleSelectMarker = (marker) => {
+    if (selectedMarker !== marker) {
+      setSelectedMarker(marker);
+    }
+  };
+
   const markers = [
     {
       latlng: { latitude: 42.05836875154035, longitude: -87.67447675173034 },
@@ -100,19 +110,27 @@ export default function App() {
     <View style={styles.container}>
       <MapView style={styles.map} region={mapRegion}>
         <Marker coordinate={mapRegion} title="Marker" />
-        {markers.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={marker.latlng}
-            title={marker.title}
-            description={marker.description}
-            pinColor={marker.pinColor}
-          />
-        ))}
+        {markers.map((marker, index) => {
+          console.log("Marker index:", index);
+          console.log("Markers array length:", markers.length);
+          return (
+            <Marker
+              key={index}
+              coordinate={marker.latlng}
+              title={marker.title}
+              description={marker.description}
+              pinColor={marker.pinColor}
+              onPress={handleSelectMarker}
+            />
+          );
+        })}
+        <Button title="Get Location" onPress={userLocation} />
+        
       </MapView>
-      <Button title="Get Location" onPress={userLocation} />
+
     </View>
   );
+  
 }
 
 const styles = StyleSheet.create({
