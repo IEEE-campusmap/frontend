@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { MaterialIcons, FontAwesome5, Entypo, FontAwesome, Ionicons, Fontisto} from '@expo/vector-icons';
 import { useNavigationState } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
 
 // Custom Drawer Component
@@ -48,7 +49,9 @@ const CustomDrawerContentComponent = (props) => {
             label="Log out"
             labelStyle={styles.logoutLabel}
             icon={() => <Entypo name="log-out" size={24} color="#40B59F" />}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => {
+                navigation.navigate("welcome");
+              }}
           />
         </View>
         </DrawerContentScrollView>

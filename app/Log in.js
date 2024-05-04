@@ -31,35 +31,34 @@ const LoginScreen = ({ navigation }) => {
         } else if (!password) {
         Alert.alert('Please Enter Your Password');
         } else {
-        login();
-     }
+        navigation.navigate('Map')};
   };
-    const login = async () => {
-        try {
-        let res = await fetch('http://localhost:8069/api/login', {
-            method: 'POST',                                
-            headers: {
-            'Content-type': 'application/json',  
-        },
-            body: JSON.stringify({                         
-            params: {
-                email: email,               
-                password: password,
-            },
-            }),
-        });
-      let response = await res.json();
-      console.log('response', response);
-      if (response.result.success == true) {
-        Alert.alert('Login successful!');
-      } else {
-        Alert.alert('Invalid email or password');
-      }
-    } catch (error) {
-      console.error('Error during login:', error); // Log errors for debugging
-      Alert.alert('An error occurred. Please try again.');
-    }
-  };
+  //   const login = async () => {
+  //       try {
+  //       let res = await fetch('http://localhost:8069/api/login', {
+  //           method: 'POST',                                
+  //           headers: {
+  //           'Content-type': 'application/json',  
+  //       },
+  //           body: JSON.stringify({                         
+  //           params: {
+  //               email: email,               
+  //               password: password,
+  //           },
+  //           }),
+  //       });
+  //     let response = await res.json();
+  //     console.log('response', response);
+  //     if (response.result.success == true) {
+  //       Alert.alert('Login successful!');
+  //     } else {
+  //       Alert.alert('Invalid email or password');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during login:', error); // Log errors for debugging
+  //     Alert.alert('An error occurred. Please try again.');
+  //   }
+  // };
     return (
   <View style={styles.container}>
       <Image

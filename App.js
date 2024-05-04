@@ -31,13 +31,11 @@ function DrawerNavigator() {
       initialRouteName="Home"
       drawerContent={CustomDrawerContentComponent}
       drawerActiveBackgroundColor="#3498db"
-      // drawerStyle={styles.drawer}
-      // drawerContentStyle={styles.drawerContent} 
       >
-      <Drawer.Screen name="Map" component={Maps} options={{ swipeEnabled: true}}/>
-      <Drawer.Screen name="Update" component={UserUpdateScreen} options={{ swipeEnabled: true}}/>
       <Drawer.Screen name="Home" component={AuthStackNavigator} 
         options={{ swipeEnabled: false, headerShown: false}}/>
+      <Drawer.Screen name="Map" component={Maps} options={{ swipeEnabled: true}}/>
+      <Drawer.Screen name="Update" component={UserUpdateScreen} options={{ swipeEnabled: true}}/>
     </Drawer.Navigator>
   );
 }
@@ -56,29 +54,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  drawerHeader: {
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 10,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-  },
-  customLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#352555',
-  },
-  logoutContainer: {
-    marginTop: 200,
-  },
-  logoutLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#352555',
   },
 });

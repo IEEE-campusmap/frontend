@@ -31,9 +31,9 @@ const HomeScreen = ({navigation}) => {
                     <FontAwesome6 name="angle-right" size={24} color="#40B59F" style={styles.arrow}/>
                 </View>
             </View>
-            <TouchableOpacity style={styles.customSVG} onPress={() => navigation.navigate('Map')}>
-                <BottomSVG/>
-            </TouchableOpacity>
+            <View style={styles.customSVG}>
+                <BottomSVG />
+            </View>
 
             </View>
     );
