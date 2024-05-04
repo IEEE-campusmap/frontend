@@ -12,6 +12,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserUpdateScreen from "./app/UserUpdateScreen";
 import Maps from "./app/Map";
 import HomeScreen from "./app/Homescreen";
+import PopUp from './app/PopUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +35,6 @@ export default function App() {
           />
 
           <Stack.Screen name="screen" component={UserUpdateScreen} />
-
           <Stack.Screen name="map" component={Maps} />
         </Stack.Navigator>
       </NavigationContainer>

@@ -2,12 +2,26 @@ import { StyleSheet, Text, View, Dimensions, Button, Pressable, Image } from "re
 import Icon from "react-native-ico-material-design";
 import { StatusBar } from "expo-status-bar";
 import Maps from './Map';  
+import PopUp from "./PopUp";
+import React, { useState, useEffect} from 'react';
 
 const HomeScreen = ({navigation}) => {
     var iconHeight = 26;
     var iconWidth = 26;
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    
+    useEffect(() => {
+        setIsPopupVisible(true);
+    }, []);
+
+    const handleOpenPopUp = () => {
+        setIsPopupVisible(true);
+    };
+    const handleClosePopUp = () => {
+        setIsPopupVisible(false);
+    };
     return (
         <>             
             {/* <Button
@@ -42,7 +56,9 @@ const HomeScreen = ({navigation}) => {
                         </Pressable> 
                     </View>
                 </View>
-
+            </View>
+            <View style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }}>
+                <PopUp isVisible={isPopupVisible} onClose={handleClosePopUp} onNavigate={() => navigation.navigate('screen')} />
             </View>
         </>
     );
