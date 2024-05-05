@@ -13,6 +13,7 @@ import UserUpdateScreen from "./app/UserUpdateScreen";
 import CustomDrawerContentComponent from './app/Side menu';
 
 
+
 const AuthStack = createNativeStackNavigator();
 function AuthStackNavigator() {
   return (
@@ -40,12 +41,12 @@ function DrawerNavigator() {
   );
 }
 
-
 export default function App() {
   return (
     <View style={styles.container}>
       <NavigationContainer>
         <DrawerNavigator />
+
       </NavigationContainer>
     </View>
   );

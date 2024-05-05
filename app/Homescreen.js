@@ -23,6 +23,7 @@ const HomeScreen = ({navigation}) => {
                         <Text style={styles.buttonText}>Log in</Text>
                     </TouchableOpacity>
                     <FontAwesome6 name="angle-right" size={24} color="#40B59F" style={styles.arrow}/>
+
                 </View>
                 <View style={styles.buttonBox}>
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('signup')}>
@@ -34,6 +35,7 @@ const HomeScreen = ({navigation}) => {
             <View style={styles.customSVG}>
                 <BottomSVG />
             </View>
+
 
             </View>
     );
