@@ -10,6 +10,8 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 const update_time = 60000;
 export default function App() {
@@ -169,7 +171,7 @@ export default function App() {
          
         <Button
           onPress={handlePresentModalPress}
-          title="Present Modal"
+          title="Pull Up Dashboard"
           color="black"
         />
          <BottomSheetModal
@@ -192,6 +194,7 @@ export default function App() {
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
                 <View style={styles.listItem}> 
+                <MaterialCommunityIcons name="map-marker-radius" size={24} style={styles.icon} />
                   <Text style={styles.libraryName}>{item.name}</Text> 
 
                   {/* <View style={styles.libraryStatus}> */}
@@ -214,6 +217,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
+  },
+  icon:{ 
+    flex: 1,
   },
   map: {
     width: "100%",
