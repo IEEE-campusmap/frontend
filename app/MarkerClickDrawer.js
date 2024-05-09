@@ -2,22 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Animated, Dimensions } from 'react-native';
 import Slider from "@react-native-community/slider";
 
-
 const { height } = Dimensions.get('window');
 const DRAWER_HEIGHT = height * 0.7; // Set the height of the drawer
 
 const DrawerComponent = ({ markerId }) => {
-  const [locationInfo, setLocationInfo] = useState({
-    title: 'Dummy Location',
-    crowdedness: 5,
-    recentUsers: [
-      { id: 1, name: 'John', rating: 4, comment: 'Great place!' },
-      { id: 2, name: 'Alice', rating: 3, comment: 'Nice ambiance.' },
-      { id: 3, name: 'Bob', rating: 5, comment: 'Highly recommended.' },
-    ],
-  });
+  const [locationInfo, setLocationInfo] = useState(null);
   const [crowdednessInfo, setCrowdednessInfo] = useState(5);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Fetch location data from the backend
+        const response = await fetch(`http://crowd-scope-web-service-env.eba-xjchfirq.us-east-1.elasticbeanstalk.com/building/${markerId}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error('Error fetching data');
+        }
+
+        setLocationInfo(data);
+        setCrowdednessInfo(data.crowdedness);
+      } catch (err) {
+        setError('Error fetching data');
+        console.error('Error fetching data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [markerId]);
   
   /*useEffect(() => {
     fetchData(); // Commented out fetching for now
@@ -57,7 +76,7 @@ const DrawerComponent = ({ markerId }) => {
     setCrowdednessInfo(value);
   };
 
-  const handleUpdatePress = () => {
+  const handleUpdatePress = async () => {
     // Handle update press here
     console.log('Update pressed');
   };
