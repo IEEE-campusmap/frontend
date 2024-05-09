@@ -5,6 +5,18 @@ import Slider from "@react-native-community/slider";
 const { height } = Dimensions.get('window');
 const DRAWER_HEIGHT = height * 0.7; // Set the height of the drawer
 
+// previous version: 
+// const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef }) => {
+//   const [locationInfo] = useState({
+//     title: 'Dummy Location',
+//   });
+//   const [crowdednessInfo, setCrowdednessInfo] = useState(5);
+//   const [recentUsers] = useState([
+//     { id: 1, name: 'John', rating: 4, comment: 'Great place!' },
+//     { id: 2, name: 'Alice', rating: 3, comment: 'Nice ambiance.' },
+//     { id: 3, name: 'Bob', rating: 5, comment: 'Highly recommended.' },
+//   ]);
+
 const DrawerComponent = ({ markerId }) => {
   const [locationInfo, setLocationInfo] = useState(null);
   const [crowdednessInfo, setCrowdednessInfo] = useState(5);
