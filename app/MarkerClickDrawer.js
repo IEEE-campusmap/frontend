@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Animated, Dimensions } from 'react-native';
-import Slider from "@react-native-community/slider";
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import Slider from '@react-native-community/slider';
+import { BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet';
 
 const { height } = Dimensions.get('window');
 const DRAWER_HEIGHT = height * 0.7; // Set the height of the drawer
@@ -49,6 +50,7 @@ const DrawerComponent = ({ markerId }) => {
 
     fetchData();
   }, [markerId]);
+}
   
   /*useEffect(() => {
     fetchData(); // Commented out fetching for now
@@ -84,135 +86,67 @@ const DrawerComponent = ({ markerId }) => {
   });
   setCrowdednessInfo(5);
 */
+const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef }) => {
+  const [locationInfo] = useState({
+    title: 'Dummy Location',
+  });
+  const [crowdednessInfo, setCrowdednessInfo] = useState(5);
+  const [recentUsers] = useState([
+    { id: 1, name: 'John', rating: 4, comment: 'Great place!' },
+    { id: 2, name: 'Alice', rating: 3, comment: 'Nice ambiance.' },
+    { id: 3, name: 'Bob', rating: 5, comment: 'Highly recommended.' },
+  ]);
+
   const handleSliderChange = (value) => {
     setCrowdednessInfo(value);
   };
 
-  const handleUpdatePress = async () => {
-    // Handle update press here
-    console.log('Update pressed');
-  };
+
+  useEffect(() => {
+    if (visible) {
+      bottomSheetModalRef.current?.present();
+    } else {
+      bottomSheetModalRef.current?.dismiss();
+    }
+  }, [visible, bottomSheetModalRef]);
 
   return (
-    <View style={styles.drawerContainer}>
-      <View style={styles.drawerHeader}>
-        <Text style={styles.title}>{locationInfo.title}</Text>
-        <Text style={styles.description}>Crowdedness: {crowdednessInfo}</Text>
-      </View>
-      <View style={styles.content}>
-        <View style={styles.sliderContainer}>
-          <TouchableOpacity
-            style={styles.sliderButton}
-            onPress={() => handleSliderChange(crowdednessInfo - 1)}
-            disabled={crowdednessInfo <= 0}
-          >
-            <Text>-</Text>
+    
+    <View style={{ flex: 1 }}>
+
+        <BottomSheetView style={{ backgroundColor: '#fff', padding: 20 }}>
+          <TouchableOpacity onPress={onClose} style={{ alignSelf: 'flex-end', padding: 10 }}>
+            <Text style={{ fontSize: 18, color: 'blue' }}>Close</Text>
           </TouchableOpacity>
-          <Text style={styles.sliderValue}>{crowdednessInfo}</Text>
-          <TouchableOpacity
-            style={styles.sliderButton}
-            //onPress={() => handleSliderChange(crowdednessInfo + 1)}
-            disabled={crowdednessInfo >= 10}
-          >
-            <Text>+</Text>
-          </TouchableOpacity>
-        </View>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={10}
-          step={1}
-          value={crowdednessInfo}
-          onValueChange={handleSliderChange}
-        />
-        <Text style={styles.subTitle}>Recent Users:</Text>
-        <FlatList
-          data={locationInfo.recentUsers}
-          renderItem={({ item }) => (
-            <View style={styles.userItem}>
-              <Text>User: {item.name}</Text>
-              <Text>Rating: {item.rating}</Text>
-              <Text>Comment: {item.comment}</Text>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-        <TouchableOpacity
-          style={styles.updateButton}
-          onPress={handleUpdatePress}
-        >
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>
+            {locationInfo.title}
+          </Text>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ fontSize: 18 }}>Crowdedness: {crowdednessInfo}</Text>
+            <Slider
+              style={{ width: '100%', height: 40 }}
+              minimumValue={0}
+              maximumValue={10}
+              step={1}
+              value={crowdednessInfo}
+              onValueChange={handleSliderChange}
+            />
+          </View>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Recent Users:</Text>
+          <FlatList
+            data={recentUsers}
+            renderItem={({ item }) => (
+              <View style={{ marginBottom: 10 }}>
+                <Text>User: {item.name}</Text>
+                <Text>Rating: {item.rating}</Text>
+                <Text>Comment: {item.comment}</Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </BottomSheetView>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  drawerContainer: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    elevation: 5,
-  },
-  drawerHeader: {
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  content: {
-    marginBottom: 20,
-  },
-  sliderContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  sliderButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'gray',
-  },
-  sliderValue: {
-    marginHorizontal: 20,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  slider: {
-    marginBottom: 20,
-  },
-  subTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  userItem: {
-    marginBottom: 10,
-  },
-  updateButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    textAlign: 'center',
-  },
-});
-
-export default DrawerComponent;
+export default MarkerDrawer;
