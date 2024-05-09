@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Dimensions, Button, FlatList, TextInput} from "
 import React from "react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
-import DrawerComponent from "./MarkerClickDrawer";
+import MarkerDrawer from "./MarkerClickDrawer";
 import * as Location from "expo-location"; 
 import {
   BottomSheetModal,
@@ -33,7 +33,8 @@ export default function App() {
   );
 
   // ref
-  const bottomSheetModalRef = useRef(null);
+  const dashboardSheetRef = useRef(null);
+  const markerSheetRef = useRef(null);;
 
   // variables
   const snapPoints = useMemo(() => ['25%', '75%'], []);
@@ -46,7 +47,34 @@ export default function App() {
     console.log('handleSheetChanges', index);
   }, []);
 
- 
+
+  const handleDashboardOpen = useCallback(() => {
+    dashboardSheetRef.current?.present();
+  }, []);
+
+  const handleMarkerSelect = useCallback((marker) => {
+    setSelectedMarker(marker);
+    markerSheetRef.current?.present();
+  }, []);
+
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+
+  const handleSelectMarker = useCallback((marker) => {
+    if (selectedMarker !== marker) {
+      setSelectedMarker(marker); // Set the new marker
+      if (drawerVisible) {
+        bottomSheetModalRef.current?.close(); // Close current bottom sheet
+      }
+      // Delay the presentation to allow the previous modal to close smoothly
+      setTimeout(() => {
+        bottomSheetModalRef.current?.present();
+        setDrawerVisible(true);
+      }, 300);
+    }
+  }, [selectedMarker, drawerVisible]); // Dependencies are correctly set here
+  
   // MAPS-------------------------------------------------------
   const [mapRegion, setMapRegion] = useState({
     latitude: 42.055984,
@@ -55,29 +83,26 @@ export default function App() {
     longitudeDelta: 0.005 * 2.16667,
   });
 
- const [selectedMarker, setSelectedMarker] = useState(null);
 
+ useEffect(() => {
   const userLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      setErrorMsg("Permisison to access location was denied");
+      setErrorMsg("Permission to access location was denied");
+      return;
     }
-    let location = await Location.getCurrentPositionAsync({
-      enableHighAccuracy: true,
-    });
+    let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
     setMapRegion({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.005,
       longitudeDelta: 0.005 * 2.16667,
     });
-    console.log(location.coords.latitude, location.coords.longitude);
   };
-
-  useEffect(() => {
-    userLocation();
-    const locationInterval = setInterval(sendLocationtoBackend, update_time);
-  }, []);
+  userLocation();
+  const locationInterval = setInterval(sendLocationtoBackend, update_time);
+  return () => clearInterval(locationInterval);
+}, []);
 
   function sendLocationtoBackend() {
     userLocation()
@@ -105,80 +130,41 @@ export default function App() {
       });
   }
 
-  const handleSelectMarker = (marker) => {
-    if (selectedMarker !== marker) {
-      setSelectedMarker(marker);
-    } 
-  };
+
 
   const markers = [
-    {
-      latlng: { latitude: 42.05836875154035, longitude: -87.67447675173034 },
-      title: "Mudd Library",
-      description: "Description 1",
-      pinColor: "blue",
-    },
-    {
-      latlng: { latitude: 42.05321151292757, longitude: -87.67412889825846 },
-      title: "University Library",
-      description: "Description 2",
-      pinColor: "green",
-    },
-    {
-      latlng: { latitude: 42.05320830112781, longitude: -87.67553348119738 },
-      title: "Deering Library",
-      description: "Description 3",
-      pinColor: "yellow",
-    },
-    {
-      latlng: { latitude: 42.05965513831689, longitude: -87.67297882367957 },
-      title: "Henry Crown Sports Pavillion",
-      description: "Description 3",
-      pinColor: "blue",
-    },
-    {
-      latlng: { latitude: 42.05430949102578, longitude: -87.67822696077528 },
-      title: "Blomquist Recreation Center",
-      description: "Description 3",
-      pinColor: "yellow",
-    },
+    { latlng: { latitude: 42.05836875154035, longitude: -87.67447675173034 }, title: 'Mudd Library', description: 'Description 1', pinColor: 'blue', id: '1' },
+    { latlng: { latitude: 42.05321151292757, longitude: -87.67412889825846 }, title: 'University Library', description: 'Description 2', pinColor: 'green', id: '2' },
+    { latlng: { latitude: 42.05320830112781, longitude: -87.67553348119738 }, title: 'Deering Library', description: 'Description 3', pinColor: 'yellow', id: '3' },
+    { latlng: { latitude: 42.05965513831689, longitude: -87.67297882367957 }, title: 'Henry Crown Sports Pavillion', description: 'Description 3', pinColor: 'blue', id: '4' },
+    { latlng: { latitude: 42.05430949102578, longitude: -87.67822696077528 }, title: 'Blomquist Recreation Center', description: 'Description 3', pinColor: 'yellow', id: '5' },
   ];
+
 
   // sendLocationtoBackend();
   // setInterval(sendLocationtoBackend, 1000);
-  return ( 
+  return (
     <BottomSheetModalProvider>
-    <View style={styles.container}>
- 
-       <MapView style={styles.map} region={mapRegion}>
-        <Marker coordinate={mapRegion} title="Marker" />
-        {markers.map((marker, index) => {
-          console.log("Marker index:", index);
-          console.log("Markers array length:", markers.length);
-          return (
+      <View style={styles.container}>
+        <MapView style={styles.map} region={mapRegion}>
+          <Marker coordinate={mapRegion} title="Marker" />
+          {markers.map((marker, index) => (
             <Marker
               key={index}
               coordinate={marker.latlng}
               title={marker.title}
               description={marker.description}
               pinColor={marker.pinColor}
-              onPress={handleSelectMarker}
+              onPress={() => handleMarkerSelect(marker)}
             />
-          );
-        })}
-        {/* <Button title="Get Location" onPress={userLocation} />  */}
-
-         
-        <Button
-          onPress={handlePresentModalPress}
-          title="Pull Up Dashboard"
-          color="black"
-        />
-         <BottomSheetModal
-          ref={bottomSheetModalRef}
+          ))}
+        </MapView>
+        <Button onPress={handleDashboardOpen} title="Pull Up Dashboard" color="black" />
+        <BottomSheetModal
+          ref={dashboardSheetRef}
           index={1}
           snapPoints={snapPoints}
-          onChange={handleSheetChanges}
+          stackBehavior="replace"
         >
           <BottomSheetView style={styles.contentContainer}>
             <TextInput
@@ -188,31 +174,41 @@ export default function App() {
               onChangeText={text => setSearchQuery(text)}
               autoCapitalize="none"
             />
-
             <FlatList
               data={filteredLibraries}
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
-                <View style={styles.listItem}> 
-                <MaterialCommunityIcons name="map-marker-radius" size={24} style={styles.icon} />
-                  <Text style={styles.libraryName}>{item.name}</Text> 
-
-                  {/* <View style={styles.libraryStatus}> */}
-                    <Text style={[styles.libraryStatus, item.status === 'Empty' ? styles.empty : styles.crowded]}>{item.status}</Text>
-                  {/* </View> */}
+                <View style={styles.listItem}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.status}</Text>
                 </View>
               )}
-          />
+            />
+            </BottomSheetView>
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={markerSheetRef}
+          index={1}
+          snapPoints={snapPoints}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            {/* Render Marker specific content here */}
+            <Text style={styles.title}>Marker Details</Text>
+            {selectedMarker && (
+              <MarkerDrawer
+                visible={drawerVisible}
+                onClose={() => setDrawerVisible(false)}
+                markerId={selectedMarker.id}
+                bottomSheetModalRef={markerSheetRef}
+              />
+            )}
+            
           </BottomSheetView>
         </BottomSheetModal>
- 
-      </MapView>          
-    </View> 
-    </BottomSheetModalProvider>   
- 
+      </View>
+    </BottomSheetModalProvider>
   );
-  
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -222,6 +218,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
+    flex: 1,
     width: "100%",
     height: "100%",
   },
@@ -248,6 +245,7 @@ const styles = StyleSheet.create({
     padding: 128,
     borderRadius: 12,
     backgroundColor: "grey", 
+    borderBottomWidth: 1,
   },
   statusIndicator: {
     width: 10,
@@ -280,4 +278,3 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 });
-

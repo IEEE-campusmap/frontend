@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet';
 
