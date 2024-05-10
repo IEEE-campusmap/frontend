@@ -64,23 +64,22 @@ export default function App({navigation}) {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
     
     useEffect(() => {
-        if(isUserInLocation(userLocation)){
+        if(isUserInLocation(location)){
           setIsPopupVisible(true);
         }
     }, []);
 
-    const isUserInLocation = (userLocation) => {
-      markers.forEach((marker) => {
-        const markerCoords = marker.latlng;
-        const userCoords = userLocation;
-        if (
-          markerCoords.latitude == userCoords.latitude &&
-          markerCoords.longitude == userCoords.longitude 
-        ){
-          return true;
-        }
-
-      })
+    const isUserInLocation = (location) => {
+      const main = markers.find((marker) => marker.title === "Deering Library");
+      const mainlat = main.latlng.latitude;
+      const mainlong = main.latlng.longitude;
+      const threshold = 0.0009009;
+      const latDiff = Math.abs(location.coords.latitude - mainlat);
+      const longDiff = Math.abs(location.coords.longitude - mainlong);
+      if (latDiff <= threshold && longDiff <= threshold){
+        return true;
+      }
+      return false;
     }
     const handleClosePopUp = () => {
         setIsPopupVisible(false);
