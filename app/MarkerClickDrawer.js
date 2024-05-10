@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Dimensions, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet';
 
@@ -36,13 +36,14 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigat
     navigation.navigate('Update');
   };
 
+
   return (
     
     <View style={{ flex: 1 }}>
 
         <BottomSheetView style={{ backgroundColor: '#fff', padding: 20 }}>
-          <TouchableOpacity onPress={onClose} style={{ alignSelf: 'flex-end', padding: 10 }}>
-            <Text style={{ fontSize: 18, color: 'blue' }}>Close</Text>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>
             {locationInfo.title}
@@ -70,8 +71,8 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigat
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-          <TouchableOpacity onPress={handleNavigateToUpdatePage} style={{ marginTop: 20, backgroundColor: 'blue', padding: 10, borderRadius: 5 }}>
-          <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>Update Crowdedness</Text>
+          <TouchableOpacity onPress={handleNavigateToUpdatePage} style={styles.updateButton}>
+          <Text style={styles.buttonText}>Update Crowdedness</Text>
         </TouchableOpacity>
         </BottomSheetView>
     </View>
@@ -79,3 +80,28 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigat
 };
 
 export default MarkerDrawer;
+
+const styles = StyleSheet.create({
+  closeButton: {
+    alignSelf: 'flex-end',
+    padding: 10
+  },
+  closeButtonText: {
+    fontSize: 18,
+    color: '#40B59F'  // Color scheme used in LoginScreen
+  },
+
+  updateButton: {
+    marginTop: 20,
+    backgroundColor: '#40B59F',  // Button color from LoginScreen
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center'
+  }
+ });

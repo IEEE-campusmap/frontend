@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Dimensions, Button, FlatList, TextInput} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Button, FlatList, TextInput} from "react-native";
 import React from "react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
@@ -159,7 +159,15 @@ export default function App({navigation}) {
             />
           ))}
         </MapView>
-        <Button onPress={handleDashboardOpen} title="Pull Up Dashboard" color="black" />
+        <TouchableOpacity onPress={handleDashboardOpen} style={{ backgroundColor: '#40B59F', // Green color from LoginScreen
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20}}>
+          <Text style={styles.buttonText}>Pull Up Dashboard</Text>
+        </TouchableOpacity>
+        
         <BottomSheetModal
           ref={dashboardSheetRef}
           index={1}
