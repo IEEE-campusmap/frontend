@@ -1,6 +1,9 @@
 import { StyleSheet, Text, View, Dimensions, Pressable, Image, TouchableOpacity } from "react-native"; 
 import { Svg, Rect, Circle } from 'react-native-svg';
 import {FontAwesome6} from '@expo/vector-icons';
+import PopUp from "./PopUp";
+import React, { useState, useEffect} from 'react';
+import {Map, userLocation, markers} from "./Map";
 
 const HomeScreen = ({navigation}) => {
     const BottomSVG = () => (
@@ -9,6 +12,8 @@ const HomeScreen = ({navigation}) => {
           <Rect x="13" width="25" height="10" rx="5" fill="#40B59F" />
           <Circle cx="45" cy="5" r="5" fill="#000000" />
         </Svg>);
+
+    
     return (           
         <View style = {styles.container}>
             <View style = {styles.welcome}>
@@ -38,6 +43,7 @@ const HomeScreen = ({navigation}) => {
 
 
             </View>
+        
     );
 }; 
 
