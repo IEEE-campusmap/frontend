@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import MarkerDrawer from "./MarkerClickDrawer";
 import * as Location from "expo-location"; 
+import PopUp from "./PopUp";
 import {
   BottomSheetModal,
   BottomSheetView,
