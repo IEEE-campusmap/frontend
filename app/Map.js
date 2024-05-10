@@ -147,7 +147,7 @@ export default function App({navigation}) {
     <BottomSheetModalProvider>
       <View style={styles.container}>
         <MapView style={styles.map} region={mapRegion}>
-          <Marker coordinate={mapRegion} title="Marker" />
+          <Marker coordinate={mapRegion} title="My Location" />
           {markers.map((marker, index) => (
             <Marker
               key={index}
