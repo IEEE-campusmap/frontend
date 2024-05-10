@@ -42,9 +42,6 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigat
     <View style={{ flex: 1 }}>
 
         <BottomSheetView style={{ backgroundColor: '#fff', padding: 20 }}>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
           <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>
             {locationInfo.title}
           </Text>
