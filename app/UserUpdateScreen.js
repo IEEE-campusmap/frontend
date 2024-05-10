@@ -39,8 +39,7 @@ const UserUpdateScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 24, fontWeight: 'bold' }}>User Update Page</Text>
-
-      <Text style={{ marginTop: 20 }}>Crowdedness: {crowdedness}</Text>
+      <Text style={{ marginTop: 20, fontSize: 20}}>Crowdedness: {crowdedness}</Text>
       <Slider
         style={{ width: '80%', marginTop: 10 }}
         minimumValue={0}
@@ -51,7 +50,7 @@ const UserUpdateScreen = ({ navigation }) => {
       />
 
       <TextInput
-        style={{ borderWidth: 1, borderColor: 'gray', marginTop: 20, padding: 10 }}
+        style={{ borderWidth: 1, borderColor: '#D6D6D6', marginTop: 20, padding: 10 }}
         placeholder="Enter your input"
         value={inputValue}
         onChangeText={handleInputChange}
@@ -66,10 +65,10 @@ const UserUpdateScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity
-        style={{ backgroundColor: 'blue', padding: 10, borderRadius: 5, marginTop: 20 }}
+        style={{ backgroundColor: '#40B59F', padding: 10, paddingHorizontal: 30, borderRadius: 10, marginTop: 20 }}
         onPress={handleSubmit}
       >
-        <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>Submit</Text>
+        <Text style={{ color: 'white', fontSize: 18, textAlign: 'center',fontWeight: '500' }}>Submit</Text>
       </TouchableOpacity>
     </View>
   );

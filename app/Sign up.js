@@ -16,7 +16,7 @@ const SignupScreen = ({ navigation }) => {
     } else if (!emailPattern.test(email)) {
     Alert.alert('Please enter a valid Northwestern email');
     } else if (!name) {
-    Alert.alert('Please enter your name');
+    Alert.alert('Please enter your username');
     } else if (!password) {
     Alert.alert('Please enter your password');
     } else {
@@ -74,7 +74,7 @@ const SignupScreen = ({ navigation }) => {
       />
       <TextInput
         style={styles.textInput}
-        placeholder="Name"
+        placeholder="Username"
         value={name}
         onChangeText={text => setName(text)}
       />

@@ -23,21 +23,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 const update_time = 60000;
 export default function App({ navigation }) {
-  // search bar + inital dashboard
-  // Sample data for libraries
 
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [libraries, setLibraries] = useState([
-    { id: "1", name: "Mudd Library", status: "Super Crowded" },
-    { id: "2", name: "Main Library", status: "Empty" },
-    { id: "3", name: "Blom", status: "Empty" },
-  ]);
-
-  const filteredLibraries = libraries.filter((library) =>
-    library.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   // ref
   const dashboardSheetRef = useRef(null);
   const markerSheetRef = useRef(null);
@@ -178,40 +165,40 @@ export default function App({ navigation }) {
     {
       latlng: { latitude: 42.05836875154035, longitude: -87.67447675173034 },
       title: "Mudd Library",
-      description: "Description 1",
+      description: "Crowded",
       pinColor: "blue",
       id: "1",
     },
     {
       latlng: { latitude: 42.05321151292757, longitude: -87.67412889825846 },
       title: "University Library",
-      description: "Description 2",
+      description: "Super Crowded",
       pinColor: "green",
       id: "2",
     },
     {
       latlng: { latitude: 42.05320830112781, longitude: -87.67553348119738 },
       title: "Deering Library",
-      description: "Description 3",
+      description: "Empty",
       pinColor: "yellow",
       id: "3",
     },
     {
       latlng: { latitude: 42.05965513831689, longitude: -87.67297882367957 },
       title: "Henry Crown Sports Pavillion",
-      description: "Description 3",
+      description: "Somewhat Crowded",
       pinColor: "blue",
       id: "4",
     },
     {
       latlng: { latitude: 42.05430949102578, longitude: -87.67822696077528 },
       title: "Blomquist Recreation Center",
-      description: "Description 3",
+      description: "Not Crowded",
       pinColor: "yellow",
       id: "5",
     },
   ];
-
+  const filteredMarkers = markers.filter((marker) => marker.title.toLowerCase().includes(searchQuery.toLowerCase()))
   // sendLocationtoBackend();
   // setInterval(sendLocationtoBackend, 1000);
   return (
@@ -250,24 +237,27 @@ export default function App({ navigation }) {
           snapPoints={snapPoints}
           stackBehavior="replace"
         >
-          <BottomSheetView style={styles.contentContainer}>
+          <BottomSheetView style={styles.contentContainer2}>
             <TextInput
               style={styles.searchBar}
-              placeholder="Search Libraries"
+              placeholder="Search Locations"
               value={searchQuery}
               onChangeText={(text) => setSearchQuery(text)}
               autoCapitalize="none"
             />
             <FlatList
-              data={filteredLibraries}
-              keyExtractor={(item) => item.id}
+              data={filteredMarkers}
+              keyExtractor={(marker) => marker.id} // Using marker ID as the key
+              contentContainerStyle={styles.flatListContainer}
               renderItem={({ item }) => (
-                <View style={styles.listItem}>
-                  <Text>{item.name}</Text>
-                  <Text>{item.status}</Text>
-                </View>
-              )}
-            />
+             <View style={styles.listItem}>
+                <TouchableOpacity onPress={() => handleMarkerSelect(item)}>
+                  <Text style={styles.listItemText}>{item.title}</Text> 
+                  <Text style={styles.listItemDescription}>{item.description}</Text>
+                </TouchableOpacity>
+            </View>
+      )}
+    />
           </BottomSheetView>
         </BottomSheetModal>
         <BottomSheetModal
@@ -315,28 +305,51 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    // alignItems: 'center',
+  },
+  contentContainer2: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  flatListContainer: {
+    width: 500,
+    backgroundColor: "#FFFFFF", // Padding at the bottom for spacing
   },
   searchBar: {
     fontSize: 16,
-    marginVertical: 10,
-    paddingVertical: 8,
+    width: '95%',
+    marginVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 10,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fafafa",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#F0F0F0",
   },
   listItem: {
-    // flexBasis: 'auto',
     alignSelf: "stretch",
     paddingVertical: 10,
-    marginHorizontal: 12,
-    marginBottom: 12,
-    padding: 128,
-    borderRadius: 12,
-    backgroundColor: "grey",
+    paddingHorizontal: 20, // Adjusted padding for better alignment
+    width: '90%',
+    marginBottom: 10,
+    // borderRadius: 12,
     borderBottomWidth: 1,
+    borderColor: "#f0f0f0",
+    backgroundColor: '#FFFFFF',
+    // shadowColor: '#000', // Box shadow color
+    // shadowOffset: { width: 0, height: 4 }, // Offset for shadow (4px downwards)
+    // shadowOpacity: 0.14, // Opacity of shadow
+    // shadowRadius: 15, // Shadow blur radius
+    borderRadius: 15,
+    alignItems: 'flex-left'
+  },
+  listItemText: {
+    fontSize: 18, // Increased font size
+    fontWeight: "bold",
+    marginBottom: 7 // Bold text
+  },
+  listItemDescription: {
+    fontSize: 16, // Font size for description
   },
   statusIndicator: {
     width: 10,
@@ -368,4 +381,5 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 6,
   },
+  buttonText: {color: '#ffffff', fontSize: 18, fontWeight: '400'},
 });

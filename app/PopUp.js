@@ -17,7 +17,7 @@ const PopUp = ({ isVisible, onClose, onNavigate}) => {
             >
                 <View style = {{ flex: 1, justifyContent: "center", alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)'}}>
                     <View style = {{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-                        <Text>"Can you update crowdedness?"</Text>
+                        <Text>Can you update crowdedness?</Text>
                         <Button title = "No" onPress = {onClose} />
                         <Button title = "Yes" onPress = {handleNavigate}/>
                     </View>

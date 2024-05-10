@@ -27,7 +27,7 @@ const LoginScreen = ({ navigation }) => {
     };
     const validate = async () => {
         if (!email) {
-        Alert.alert('Please Enter Your Email id');
+        Alert.alert('Please Enter Your Email');
         } else if (!password) {
         Alert.alert('Please Enter Your Password');
         } else {
