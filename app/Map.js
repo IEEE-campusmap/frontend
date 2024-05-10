@@ -1,53 +1,57 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Button, FlatList, TextInput} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Button,
+  FlatList,
+  TextInput,
+} from "react-native";
 import React from "react";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import MarkerDrawer from "./MarkerClickDrawer";
-import * as Location from "expo-location"; 
+import * as Location from "expo-location";
 import PopUp from "./PopUp";
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+} from "@gorhom/bottom-sheet";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const update_time = 60000;
-export default function App({navigation}) {
-  
-
+export default function App({ navigation }) {
   // search bar + inital dashboard
-  // Sample data for libraries 
+  // Sample data for libraries
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [libraries, setLibraries] = useState([
-    { id: '1', name: 'Mudd Library', status: 'Super Crowded' },
-    { id: '2', name: 'Main Library', status: 'Empty' },
-    { id: '3', name: 'Blom', status: 'Empty' }
+    { id: "1", name: "Mudd Library", status: "Super Crowded" },
+    { id: "2", name: "Main Library", status: "Empty" },
+    { id: "3", name: "Blom", status: "Empty" },
   ]);
 
-  const filteredLibraries = libraries.filter(library =>
+  const filteredLibraries = libraries.filter((library) =>
     library.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // ref
   const dashboardSheetRef = useRef(null);
-  const markerSheetRef = useRef(null);;
+  const markerSheetRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ['25%', '75%'], []);
+  const snapPoints = useMemo(() => ["25%", "75%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    console.log("handleSheetChanges", index);
   }, []);
-
 
   const handleDashboardOpen = useCallback(() => {
     dashboardSheetRef.current?.present();
@@ -62,44 +66,47 @@ export default function App({navigation}) {
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-    
-    useEffect(() => {
-        if(isUserInLocation(location)){
-          setIsPopupVisible(true);
+
+  // useEffect(() => {
+  // if(isUserInLocation(location)){
+  //   setIsPopupVisible(true);
+  // }
+  // }, []);
+
+  const isUserInLocation = (location) => {
+    const main = markers.find((marker) => marker.title === "Deering Library");
+    const mainlat = main.latlng.latitude;
+    const mainlong = main.latlng.longitude;
+    const threshold = 0.09009;
+    const latDiff = Math.abs(location.coords.latitude - mainlat);
+    const longDiff = Math.abs(location.coords.longitude - mainlong);
+    if (latDiff <= threshold && longDiff <= threshold) {
+      console.log("at deering!");
+      return true;
+    }
+    return false;
+  };
+  const handleClosePopUp = () => {
+    setIsPopupVisible(false);
+  };
+
+  const handleSelectMarker = useCallback(
+    (marker) => {
+      if (selectedMarker !== marker) {
+        setSelectedMarker(marker); // Set the new marker
+        if (drawerVisible) {
+          bottomSheetModalRef.current?.close(); // Close current bottom sheet
         }
-    }, []);
-
-    const isUserInLocation = (location) => {
-      const main = markers.find((marker) => marker.title === "Deering Library");
-      const mainlat = main.latlng.latitude;
-      const mainlong = main.latlng.longitude;
-      const threshold = 0.0009009;
-      const latDiff = Math.abs(location.coords.latitude - mainlat);
-      const longDiff = Math.abs(location.coords.longitude - mainlong);
-      if (latDiff <= threshold && longDiff <= threshold){
-        return true;
+        // Delay the presentation to allow the previous modal to close smoothly
+        setTimeout(() => {
+          bottomSheetModalRef.current?.present();
+          setDrawerVisible(true);
+        }, 300);
       }
-      return false;
-    }
-    const handleClosePopUp = () => {
-        setIsPopupVisible(false);
-    };
+    },
+    [selectedMarker, drawerVisible]
+  ); // Dependencies are correctly set here
 
-
-  const handleSelectMarker = useCallback((marker) => {
-    if (selectedMarker !== marker) {
-      setSelectedMarker(marker); // Set the new marker
-      if (drawerVisible) {
-        bottomSheetModalRef.current?.close(); // Close current bottom sheet
-      }
-      // Delay the presentation to allow the previous modal to close smoothly
-      setTimeout(() => {
-        bottomSheetModalRef.current?.present();
-        setDrawerVisible(true);
-      }, 300);
-    }
-  }, [selectedMarker, drawerVisible]); // Dependencies are correctly set here
-  
   // MAPS-------------------------------------------------------
   const [mapRegion, setMapRegion] = useState({
     latitude: 42.055984,
@@ -108,63 +115,102 @@ export default function App({navigation}) {
     longitudeDelta: 0.005 * 2.16667,
   });
 
-
- useEffect(() => {
-  const userLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
-    setMapRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005 * 2.16667,
-    });
-  };
-  userLocation();
-  const locationInterval = setInterval(sendLocationtoBackend, update_time);
-  return () => clearInterval(locationInterval);
-}, []);
-
-  function sendLocationtoBackend() {
-    userLocation()
-      .then((location) => {
-        fetch("/api/location", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(location),
-        })
-          .then((reponse) => {
-            if (!reponse.ok) {
-              console.log(`location is ${location}`);
-              // throw new Error("Failed to send location data to backend");
-            }
-            console.log("Location data send successfully");
-          })
-          .catch((error) => {
-            console.error("Error sending location data:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error retrieving user location: ", error);
+  useEffect(() => {
+    const userLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: true,
       });
-  }
 
+      console.log(
+        "location: ",
+        location.coords.latitude,
+        " ",
+        location.coords.longitude
+      );
+      setMapRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005 * 2.16667,
+      });
+      if (isUserInLocation(location)) {
+        setIsPopupVisible(true);
+      }
+    };
+    // userLocation();
+    setInterval(userLocation, update_time);
+    // const locationInterval = setInterval(sendLocationtoBackend, update_time);
+    // return () => clearInterval(locationInterval);
+  }, []);
 
+  // function sendLocationtoBackend() {
+  //   userLocation()
+  //     .then((location) => {
+  //       fetch("/api/location", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(location),
+  //       })
+  //         .then((reponse) => {
+  //           if (!reponse.ok) {
+  //             console.log(`location is ${location}`);
+  //             // throw new Error("Failed to send location data to backend");
+  //           }
+  //           console.log("Location data send successfully");
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error sending location data:", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error retrieving user location: ", error);
+  //     });
+  // }
 
   const markers = [
-    { latlng: { latitude: 42.05836875154035, longitude: -87.67447675173034 }, title: 'Mudd Library', description: 'Description 1', pinColor: 'blue', id: '1' },
-    { latlng: { latitude: 42.05321151292757, longitude: -87.67412889825846 }, title: 'University Library', description: 'Description 2', pinColor: 'green', id: '2' },
-    { latlng: { latitude: 42.05320830112781, longitude: -87.67553348119738 }, title: 'Deering Library', description: 'Description 3', pinColor: 'yellow', id: '3' },
-    { latlng: { latitude: 42.05965513831689, longitude: -87.67297882367957 }, title: 'Henry Crown Sports Pavillion', description: 'Description 3', pinColor: 'blue', id: '4' },
-    { latlng: { latitude: 42.05430949102578, longitude: -87.67822696077528 }, title: 'Blomquist Recreation Center', description: 'Description 3', pinColor: 'yellow', id: '5' },
+    {
+      latlng: { latitude: 42.05836875154035, longitude: -87.67447675173034 },
+      title: "Mudd Library",
+      description: "Description 1",
+      pinColor: "blue",
+      id: "1",
+    },
+    {
+      latlng: { latitude: 42.05321151292757, longitude: -87.67412889825846 },
+      title: "University Library",
+      description: "Description 2",
+      pinColor: "green",
+      id: "2",
+    },
+    {
+      latlng: { latitude: 42.05320830112781, longitude: -87.67553348119738 },
+      title: "Deering Library",
+      description: "Description 3",
+      pinColor: "yellow",
+      id: "3",
+    },
+    {
+      latlng: { latitude: 42.05965513831689, longitude: -87.67297882367957 },
+      title: "Henry Crown Sports Pavillion",
+      description: "Description 3",
+      pinColor: "blue",
+      id: "4",
+    },
+    {
+      latlng: { latitude: 42.05430949102578, longitude: -87.67822696077528 },
+      title: "Blomquist Recreation Center",
+      description: "Description 3",
+      pinColor: "yellow",
+      id: "5",
+    },
   ];
-
 
   // sendLocationtoBackend();
   // setInterval(sendLocationtoBackend, 1000);
@@ -184,15 +230,20 @@ export default function App({navigation}) {
             />
           ))}
         </MapView>
-        <TouchableOpacity onPress={handleDashboardOpen} style={{ backgroundColor: '#40B59F', // Green color from LoginScreen
+        <TouchableOpacity
+          onPress={handleDashboardOpen}
+          style={{
+            backgroundColor: "#40B59F", // Green color from LoginScreen
             padding: 10,
             borderRadius: 5,
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: 20}}>
+            alignItems: "center",
+            justifyContent: "center",
+            margin: 20,
+          }}
+        >
           <Text style={styles.buttonText}>Pull Up Dashboard</Text>
         </TouchableOpacity>
-        
+
         <BottomSheetModal
           ref={dashboardSheetRef}
           index={1}
@@ -204,12 +255,12 @@ export default function App({navigation}) {
               style={styles.searchBar}
               placeholder="Search Libraries"
               value={searchQuery}
-              onChangeText={text => setSearchQuery(text)}
+              onChangeText={(text) => setSearchQuery(text)}
               autoCapitalize="none"
             />
             <FlatList
               data={filteredLibraries}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <View style={styles.listItem}>
                   <Text>{item.name}</Text>
@@ -217,7 +268,7 @@ export default function App({navigation}) {
                 </View>
               )}
             />
-            </BottomSheetView>
+          </BottomSheetView>
         </BottomSheetModal>
         <BottomSheetModal
           ref={markerSheetRef}
@@ -225,32 +276,36 @@ export default function App({navigation}) {
           snapPoints={snapPoints}
         >
           <BottomSheetView style={styles.contentContainer}>
-
             {selectedMarker && (
               <MarkerDrawer
                 visible={drawerVisible}
                 onClose={() => setDrawerVisible(false)}
                 markerId={selectedMarker.id}
                 bottomSheetModalRef={markerSheetRef}
-                navigation = {navigation}
+                navigation={navigation}
               />
             )}
-            
           </BottomSheetView>
         </BottomSheetModal>
-        </View>
-          <View style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }}>
-          <PopUp isVisible={isPopupVisible} onClose={handleClosePopUp} onNavigate={() => navigation.navigate('screen')} />
+      </View>
+      <View
+        style={{ flex: 0.1, justifyContent: "center", alignItems: "center" }}
+      >
+        <PopUp
+          isVisible={isPopupVisible}
+          onClose={handleClosePopUp}
+          onNavigate={() => navigation.navigate("screen")}
+        />
       </View>
     </BottomSheetModalProvider>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    flex: 1,
   },
-  icon:{ 
+  icon: {
     flex: 1,
   },
   map: {
@@ -267,10 +322,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   listItem: {
     // flexBasis: 'auto',
@@ -280,7 +335,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 128,
     borderRadius: 12,
-    backgroundColor: "grey", 
+    backgroundColor: "grey",
     borderBottomWidth: 1,
   },
   statusIndicator: {
@@ -291,26 +346,26 @@ const styles = StyleSheet.create({
     float: "right",
   },
   crowded: {
-    color: 'red',
+    color: "red",
   },
   empty: {
-    color: 'green',
+    color: "green",
   },
   libraryName: {
     fontSize: 16,
-    fontWeight: 'bold',
-    flex: 1,     
+    fontWeight: "bold",
+    flex: 1,
   },
   libraryStatus: {
     fontSize: 14,
     flex: 1,
   },
   handleIndicator: {
-    backgroundColor: 'grey',
+    backgroundColor: "grey",
     width: 100,
     height: 4,
     borderRadius: 2,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 6,
   },
 });
