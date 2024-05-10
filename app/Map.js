@@ -14,7 +14,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 
 const update_time = 60000;
-export default function App() {
+export default function App({navigation}) {
   
 
   // search bar + inital dashboard
@@ -192,14 +192,14 @@ export default function App() {
           snapPoints={snapPoints}
         >
           <BottomSheetView style={styles.contentContainer}>
-            {/* Render Marker specific content here */}
-            <Text style={styles.title}>Marker Details</Text>
+
             {selectedMarker && (
               <MarkerDrawer
                 visible={drawerVisible}
                 onClose={() => setDrawerVisible(false)}
                 markerId={selectedMarker.id}
                 bottomSheetModalRef={markerSheetRef}
+                navigation = {navigation}
               />
             )}
             

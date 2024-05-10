@@ -6,87 +6,8 @@ import { BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet';
 const { height } = Dimensions.get('window');
 const DRAWER_HEIGHT = height * 0.7; // Set the height of the drawer
 
-// previous version: 
-// const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef }) => {
-//   const [locationInfo] = useState({
-//     title: 'Dummy Location',
-//   });
-//   const [crowdednessInfo, setCrowdednessInfo] = useState(5);
-//   const [recentUsers] = useState([
-//     { id: 1, name: 'John', rating: 4, comment: 'Great place!' },
-//     { id: 2, name: 'Alice', rating: 3, comment: 'Nice ambiance.' },
-//     { id: 3, name: 'Bob', rating: 5, comment: 'Highly recommended.' },
-//   ]);
 
-const DrawerComponent = ({ markerId }) => {
-  const [locationInfo, setLocationInfo] = useState(null);
-  const [crowdednessInfo, setCrowdednessInfo] = useState(5);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        // Fetch location data from the backend
-        const response = await fetch(`http://crowd-scope-web-service-env.eba-xjchfirq.us-east-1.elasticbeanstalk.com/building/${markerId}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error('Error fetching data');
-        }
-
-        setLocationInfo(data);
-        setCrowdednessInfo(data.crowdedness);
-      } catch (err) {
-        setError('Error fetching data');
-        console.error('Error fetching data:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [markerId]);
-}
-  
-  /*useEffect(() => {
-    fetchData(); // Commented out fetching for now
-    // Slide up the drawer when component mounts
-    Animated.timing(drawerAnimation, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  }, []);
-
- const fetchData = async () => {
-    try {
-      const response = await fetch('./locationData.json');
-      const data = await response.json();
-      const location = data.find((location) => location.id === markerId);
-      setLocationInfo(location);
-      setCrowdednessInfo(location ? location.crowdedness : 0);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }; 
-*/
-  // Use dummy data instead of fetching
- /* setLocationInfo({
-    title: 'Dummy Location',
-    crowdedness: 5,
-    recentUsers: [
-      { id: 1, name: 'John', rating: 4, comment: 'Great place!' },
-      { id: 2, name: 'Alice', rating: 3, comment: 'Nice ambiance.' },
-      { id: 3, name: 'Bob', rating: 5, comment: 'Highly recommended.' },
-    ],
-  });
-  setCrowdednessInfo(5);
-*/
-const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef }) => {
+const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigation }) => {
   const [locationInfo] = useState({
     title: 'Dummy Location',
   });
@@ -109,6 +30,11 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef }) => {
       bottomSheetModalRef.current?.dismiss();
     }
   }, [visible, bottomSheetModalRef]);
+
+  const handleNavigateToUpdatePage = () => {
+    // Navigate to UserUpdateScreen
+    navigation.navigate('Update');
+  };
 
   return (
     
@@ -144,6 +70,9 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef }) => {
             )}
             keyExtractor={(item) => item.id.toString()}
           />
+          <TouchableOpacity onPress={handleNavigateToUpdatePage} style={{ marginTop: 20, backgroundColor: 'blue', padding: 10, borderRadius: 5 }}>
+          <Text style={{ color: 'white', fontSize: 18, textAlign: 'center' }}>Update Crowdedness</Text>
+        </TouchableOpacity>
         </BottomSheetView>
     </View>
   );
