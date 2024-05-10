@@ -61,6 +61,31 @@ export default function App({navigation}) {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [drawerVisible, setDrawerVisible] = useState(false);
 
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+    
+    useEffect(() => {
+        if(isUserInLocation(userLocation)){
+          setIsPopupVisible(true);
+        }
+    }, []);
+
+    const isUserInLocation = (userLocation) => {
+      markers.forEach((marker) => {
+        const markerCoords = marker.latlng;
+        const userCoords = userLocation;
+        if (
+          markerCoords.latitude == userCoords.latitude &&
+          markerCoords.longitude == userCoords.longitude 
+        ){
+          return true;
+        }
+
+      })
+    }
+    const handleClosePopUp = () => {
+        setIsPopupVisible(false);
+    };
+
 
   const handleSelectMarker = useCallback((marker) => {
     if (selectedMarker !== marker) {
@@ -161,11 +186,11 @@ export default function App({navigation}) {
           ))}
         </MapView>
         <TouchableOpacity onPress={handleDashboardOpen} style={{ backgroundColor: '#40B59F', // Green color from LoginScreen
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20}}>
+            padding: 10,
+            borderRadius: 5,
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: 20}}>
           <Text style={styles.buttonText}>Pull Up Dashboard</Text>
         </TouchableOpacity>
         
@@ -214,6 +239,9 @@ export default function App({navigation}) {
             
           </BottomSheetView>
         </BottomSheetModal>
+        </View>
+          <View style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }}>
+          <PopUp isVisible={isPopupVisible} onClose={handleClosePopUp} onNavigate={() => navigation.navigate('screen')} />
       </View>
     </BottomSheetModalProvider>
   );
