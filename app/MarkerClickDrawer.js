@@ -9,7 +9,7 @@ const DRAWER_HEIGHT = height * 0.7; // Set the height of the drawer
 
 const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigation }) => {
   const [locationInfo] = useState({
-    title: 'Dummy Location',
+    title: 'Location',
   });
   const [crowdednessInfo, setCrowdednessInfo] = useState(5);
   const [recentUsers] = useState([
