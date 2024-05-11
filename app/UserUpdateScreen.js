@@ -8,7 +8,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 const UserUpdateScreen = ({ navigation }) => {
   const [crowdedness, setCrowdedness] = useState(0);
   const [inputValue, setInputValue] = useState('');
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState(''); 
+
   const emojis = ['😊', '😐', '😫'];
 
   const handleSliderChange = (value) => {
@@ -19,6 +20,11 @@ const UserUpdateScreen = ({ navigation }) => {
     setInputValue(text);
   };
   const [selected, setSelected] = useState("");
+  
+  const handleselected = (place) => { 
+    this.selected = place;    
+  };
+
   const data = [
     {key:'1', value:'Mudd Library'},
     {key:'2', value:'University Library'},
@@ -26,7 +32,9 @@ const UserUpdateScreen = ({ navigation }) => {
     {key:'4', value:'Henry Crown Sports Pavillion'},
     {key:'5', value:'Blomquist Recreation Center'},
   ]
-  const handleSubmit = () => {
+ 
+  const handleSubmit = () => {  
+    
     const requestBody = {
       crowdedness,
       inputValue
@@ -44,7 +52,7 @@ const UserUpdateScreen = ({ navigation }) => {
     //   });
 
     // For this example, we'll just display an alert with the request body
-    Alert.alert('Post Request', JSON.stringify(requestBody));
+    Alert.alert('Thank You for the Input!', "Reponse submitted for " + this.selected);
   };
 
   return (
@@ -52,7 +60,7 @@ const UserUpdateScreen = ({ navigation }) => {
       <Text style={{ fontSize: 24, fontWeight: 'bold'}}>User Update</Text>
       <View style={{paddingVertical: 10, marginVertical:10 }}>
       <SelectList 
-        setSelected={(val) => setSelected(val)} 
+        setSelected={(val) => handleselected(val)} 
         data={data} 
         save="value"
         placeholder="Select location"
