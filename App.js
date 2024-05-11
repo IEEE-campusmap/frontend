@@ -33,9 +33,9 @@ function DrawerNavigator() {
       drawerContent={CustomDrawerContentComponent}
       drawerActiveBackgroundColor="#3498db"
       >
-      <Drawer.Screen name="Home" component={AuthStackNavigator} 
-        options={{ swipeEnabled: false, headerShown: false}}/>
-      <Drawer.Screen name="Map" component={Maps} options={{ swipeEnabled: true}}/>
+      {/* <Drawer.Screen name="Home" component={AuthStackNavigator} 
+        options={{ swipeEnabled: false, headerShown: false}}/> */}
+      {/* <Drawer.Screen name="Map" component={Maps} options={{ swipeEnabled: true}}/> */}
       <Drawer.Screen name="Update" component={UserUpdateScreen} options={{ swipeEnabled: true}}/>
     </Drawer.Navigator>
   );
