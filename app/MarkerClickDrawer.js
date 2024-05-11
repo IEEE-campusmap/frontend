@@ -14,6 +14,8 @@ import {
 } from "@gorhom/bottom-sheet";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
+const ipaddr = "http://71dd-2601-246-0-910-dd98-d43a-ae99-24a9.ngrok-free.app";
+
 const { height } = Dimensions.get("window");
 const DRAWER_HEIGHT = height * 0.7; // Set the height of the drawer
 const markers = [
@@ -66,34 +68,55 @@ const MarkerDrawer = ({
     description: marker?.description || "No Description",
     scale: marker?.scale || "0",
   });
-  const [recentUsers] = useState([
+  const [recentUsers, setrecentUsers] = useState([
     { id: 1, name: "John", rating: 4, comment: "Great place!" },
     { id: 2, name: "Alice", rating: 3, comment: "Nice ambiance." },
     { id: 3, name: "Bob", rating: 5, comment: "Highly recommended." },
   ]);
-
-  // const fetchUserInfo = (markerId) => {
-  //   fetch(`${ipaddr}/building/${markerId}`)
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       (data); // Set the user data to state
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message); // Store the error message in state
-  //       console.error("There was an error fetching the user data:", error);
-  //     });
-  // };
+  const [rating, setRating] = useState(0);
 
   const handleSliderChange = (value) => {
     setCrowdednessInfo(value);
   };
 
   useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        console.log("Marker ID: ", markerId);
+        // Fetch location data from the backend
+        const response = await fetch(`${ipaddr}/building/${markerId}`);
+        if (response.status != 200) {
+          console.log("error fetching data");
+        } else {
+          // console.log(response);
+          // console.log("response ", response.json());
+          const data = await response.json();
+
+          console.log("location info:", data);
+          setrecentUsers(data);
+
+          const averageRating =
+            data.reduce((acc, cur) => acc + cur.rating, 0) / data.length;
+
+          console.log("Average Rating:", averageRating);
+
+          setRating(averageRating);
+
+          if (!response.ok) {
+            throw new Error("Error fetching data");
+          }
+        }
+
+        // setrecentUsers(d);
+      } catch (err) {
+        // setError("Error fetching data");
+        console.error("Error fetching data:", err);
+      } finally {
+        // setIsLoading(false);
+      }
+    };
+    fetchUserInfo();
+
     if (visible) {
       bottomSheetModalRef.current?.present();
     } else {
@@ -124,9 +147,7 @@ const MarkerDrawer = ({
           {locationInfo.description}
         </Text>
         <View style={{ marginBottom: 20 }}>
-          <Text style={{ fontSize: 18 }}>
-            Crowdedness: {locationInfo.scale}
-          </Text>
+          <Text style={{ fontSize: 18 }}>Crowdedness: {rating}</Text>
         </View>
         <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
           Recent Users:

@@ -11,6 +11,8 @@ import Slider from "@react-native-community/slider";
 import { SelectList } from "react-native-dropdown-select-list";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
+const ipaddr = "http://71dd-2601-246-0-910-dd98-d43a-ae99-24a9.ngrok-free.app";
+
 const UserUpdateScreen = ({ navigation }) => {
   const [crowdedness, setCrowdedness] = useState(0);
   const [inputValue, setInputValue] = useState("");
@@ -41,8 +43,8 @@ const UserUpdateScreen = ({ navigation }) => {
     { key: "5", value: "Blomquist Recreation Center" },
   ];
 
-  const handleSubmit = () => {
-    if (!this.selected || crowdedness === 0) {
+  const handleSubmit = async () => {
+    if (crowdedness === 0) {
       // If no place is selected, show an error alert.
       Alert.alert(
         "Error",
@@ -51,10 +53,11 @@ const UserUpdateScreen = ({ navigation }) => {
       return; // Exit the function early to prevent further processing.
     }
 
-    const requestBody = JSON.stringify({
-      selected: this.selected,
-      crowdedness: this.crowdedness,
-      inputValue: this.inputValue,
+    const requestBody = await JSON.stringify({
+      bid: selected,
+      crowdedness: crowdedness,
+      inputValue: inputValue,
+      comment: comment,
     });
 
     // const requestBody = {
@@ -67,11 +70,16 @@ const UserUpdateScreen = ({ navigation }) => {
     // Send the POST request with the requestBody
     // You can use libraries like axios or fetch to make the request
     // Example:
-    axios
-      .post("https://example.com/api/update", requestBody)
+    fetch(`${ipaddr}/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: requestBody,
+    })
       .then((response) => {
         // Handle the response
-        console.log("successfully send upda  tes");
+        console.log("successfully send updates");
       })
       .catch((error) => {
         // Handle the error
