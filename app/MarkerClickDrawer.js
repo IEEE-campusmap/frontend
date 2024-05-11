@@ -13,28 +13,33 @@ const markers = [
     description: "Crowded",
     pinColor: "blue",
     id: "1",
+    scale: "3",
   },
   {
     title: "University Library",
     description: "Super Crowded",
+    scale: "5",
     pinColor: "green",
     id: "2",
   },
   {
     title: "Deering Library",
     description: "Empty",
+    scale: "0",
     pinColor: "yellow",
     id: "3",
   },
   {
     title: "Henry Crown Sports Pavillion",
     description: "Little Crowded",
+    scale: "2",
     pinColor: "blue",
     id: "4",
   },
   {
     title: "Blomquist Recreation Center",
     description: "Not Crowded",
+    scale: "1",
     pinColor: "yellow",
     id: "5",
   },
@@ -44,8 +49,8 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigat
   const [locationInfo] = useState({
     title: marker?.title || "Unknown Title",
     description: marker?.description || "No Description",
+    scale: marker?.scale || "0",
   });
-  const [crowdednessInfo, setCrowdednessInfo] = useState(5);
   const [recentUsers] = useState([
     { id: 1, name: 'John', rating: 4, comment: 'Great place!' },
     { id: 2, name: 'Alice', rating: 3, comment: 'Nice ambiance.' },
@@ -90,15 +95,7 @@ const MarkerDrawer = ({ visible, onClose, markerId, bottomSheetModalRef, navigat
             {locationInfo.description}
           </Text>
           <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 18 }}>Crowdedness: {crowdednessInfo}</Text>
-            <Slider
-              style={{ width: '100%', height: 40 }}
-              minimumValue={0}
-              maximumValue={10}
-              step={1}
-              value={crowdednessInfo}
-              onValueChange={handleSliderChange}
-            />
+            <Text style={{ fontSize: 18 }}>Crowdedness: {locationInfo.scale}</Text>
           </View>
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Recent Users:</Text>
           <FlatList

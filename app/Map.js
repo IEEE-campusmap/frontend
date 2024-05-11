@@ -284,7 +284,7 @@ export default function App({ navigation }) {
         <PopUp
           isVisible={isPopupVisible}
           onClose={handleClosePopUp}
-          onNavigate={() => navigation.navigate("screen")}
+          onNavigate={() => navigation.navigate("Update")}
         />
       </View>
     </BottomSheetModalProvider>

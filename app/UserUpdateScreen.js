@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import Slider from "@react-native-community/slider";
+import { SelectList } from 'react-native-dropdown-select-list';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 
 const UserUpdateScreen = ({ navigation }) => {
   const [crowdedness, setCrowdedness] = useState(0);
   const [inputValue, setInputValue] = useState('');
+  const [comment, setComment] = useState('');
   const emojis = ['😊', '😐', '😫'];
 
   const handleSliderChange = (value) => {
@@ -14,7 +18,14 @@ const UserUpdateScreen = ({ navigation }) => {
   const handleInputChange = (text) => {
     setInputValue(text);
   };
-
+  const [selected, setSelected] = useState("");
+  const data = [
+    {key:'1', value:'Mudd Library'},
+    {key:'2', value:'University Library'},
+    {key:'3', value:'Deering Library'},
+    {key:'4', value:'Henry Crown Sports Pavillion'},
+    {key:'5', value:'Blomquist Recreation Center'},
+  ]
   const handleSubmit = () => {
     const requestBody = {
       crowdedness,
@@ -38,20 +49,40 @@ const UserUpdateScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>User Update Page</Text>
-      <Text style={{ marginTop: 20, fontSize: 20}}>Crowdedness: {crowdedness}</Text>
+      <Text style={{ fontSize: 24, fontWeight: 'bold'}}>User Update</Text>
+      <View style={{paddingVertical: 10, marginVertical:10 }}>
+      <SelectList 
+        setSelected={(val) => setSelected(val)} 
+        data={data} 
+        save="value"
+        placeholder="Select location"
+        searchPlaceholder="    Search locations"
+        searchicon={<AntDesign name="search1" size={20} color="#D6D6D6" />}
+        closeicon={<AntDesign name="close" size={15} color="#D6D6D6" />}
+        dropdownStyles={{borderColor:"#D6D6D6", width:"100%", alignSelf: "center"}}
+        boxStyles={{borderColor:"#D6D6D6", width:"85%", alignSelf: "center"}}
+        dropdownTextStyles ={{ fontSize: 16}}
+    />
+    </View>
+      <Text style={{ marginTop: 5, fontSize: 17}}>Crowdedness: {crowdedness}</Text>
       <Slider
-        style={{ width: '80%', marginTop: 10 }}
+        style={{ width: '70%', marginTop: 10 }}
         minimumValue={0}
-        maximumValue={10}
+        maximumValue={5}
         step={1}
         value={crowdedness}
         onValueChange={handleSliderChange}
+        minimumTrackTintColor='#40B59F'
       />
-
       <TextInput
-        style={{ borderWidth: 1, borderColor: '#D6D6D6', marginTop: 20, padding: 10 }}
-        placeholder="Enter your input"
+            style={{ borderWidth: 1, borderColor: '#D6D6D6', marginTop: 20, padding: 10, borderRadius:10, width:"70%", height:50}}
+            placeholder="Your comment (optional)"
+            value={comment}
+            onChangeText={d => setComment(d)}
+          />
+      <TextInput
+        style={{ borderWidth: 1, borderColor: '#D6D6D6', marginTop: 20, padding: 10, borderRadius:10, width:"70%", height:50}}
+        placeholder="Choose your reaction below"
         value={inputValue}
         onChangeText={handleInputChange}
       />
@@ -65,7 +96,7 @@ const UserUpdateScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity
-        style={{ backgroundColor: '#40B59F', padding: 10, paddingHorizontal: 30, borderRadius: 10, marginTop: 20 }}
+        style={{ backgroundColor: '#40B59F', padding: 10, paddingHorizontal: 50, borderRadius: 10, marginTop: 20, height:50, justifyContent: 'center'}}
         onPress={handleSubmit}
       >
         <Text style={{ color: 'white', fontSize: 18, textAlign: 'center',fontWeight: '500' }}>Submit</Text>
