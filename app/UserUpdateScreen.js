@@ -30,9 +30,9 @@ const UserUpdateScreen = ({ navigation }) => {
   const [selected, setSelected] = useState("");
 
   const handleselected = (place) => {
-    // this.selected = place;
+    this.selected = place;
     console.log(place);
-    setSelected(place.toString());
+    // setSelected(place.toString());
   };
 
   const data = [
