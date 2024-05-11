@@ -36,7 +36,7 @@ const UserUpdateScreen = ({ navigation }) => {
   const handleSubmit = () => {   
     if (!this.selected || crowdedness === 0) {
       // If no place is selected, show an error alert.
-      Alert.alert('Error', 'Please select a location and rate crowdedness(1-9) before submitting.');
+      Alert.alert('Error', 'Please select a location and rate crowdedness (1-9) before submitting.');
       return; // Exit the function early to prevent further processing.
     }
 
