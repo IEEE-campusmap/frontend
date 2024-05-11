@@ -33,8 +33,13 @@ const UserUpdateScreen = ({ navigation }) => {
     {key:'5', value:'Blomquist Recreation Center'},
   ]
  
-  const handleSubmit = () => {  
-    
+  const handleSubmit = () => {   
+    if (!this.selected || crowdedness === 0) {
+      // If no place is selected, show an error alert.
+      Alert.alert('Error', 'Please select a location and rate crowdedness(1-9) before submitting.');
+      return; // Exit the function early to prevent further processing.
+    }
+
     const requestBody = {
       crowdedness,
       inputValue
