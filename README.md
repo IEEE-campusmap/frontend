@@ -1,6 +1,6 @@
 # CrowdScope
 
-CrowdScope is a React Native mobile application built with Expo and designed to offer Northwestern students real-time occupancy information of campus facilities such as libraries, dining halls, and gyms through crowdsourcing. This solution empowers students to efficiently manage their time on campus by avoiding overcrowded places.
+CrowdScope is a React Native mobile application built with Expo and designed to offer Northwestern students real-time occupancy information of campus facilities such as libraries, dining halls, and gyms through crowdsourcing. This user-friendly app leverages real-time crowd ratings to help Northwestern students avoid the hassle of crowded spots. Plan your day with confidence and save time for what matters most.
 
 # Problem Statement
 
